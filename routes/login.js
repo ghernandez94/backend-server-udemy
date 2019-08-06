@@ -41,8 +41,7 @@ app.post('/', (req, res, next) => {
         res.status(200).json({
             ok: true,
             data: usuarioBD,
-            token: token,
-            id: usuarioBD._id
+            token: token
         });
     });
 
