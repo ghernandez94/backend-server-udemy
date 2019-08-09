@@ -13,7 +13,7 @@ app.get('/', (req, res, next) => {
     let limit = req.query.limit || 5;
     limit = Number(limit);
 
-    Usuario.find({}, 'nombre email img role')
+    Usuario.find({}, 'nombre email img role google')
         .skip(skip)
         .limit(limit)
         .exec(
@@ -135,7 +135,7 @@ app.delete('/:id', mdAutenticacion.verificaToken, (req, res) => {
 
         res.status(200).json({
             ok: true,
-            usuario: usuarioBorrado
+            data: usuarioBorrado
         });
     })
 });

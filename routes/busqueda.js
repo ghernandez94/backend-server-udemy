@@ -85,7 +85,7 @@ function buscarMedicos(search) {
 
 function buscarUsuarios(search) {
     return new Promise( (resolve, reject) => {
-        Usuario.find({}, 'nombre email role')
+        Usuario.find({}, 'nombre email img role google')
             .or( { 'nombre': search }, { 'email': search })
             .exec((err, usuarios) => {
                 if( err ){
