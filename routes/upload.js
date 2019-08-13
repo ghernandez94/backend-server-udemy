@@ -53,7 +53,7 @@ app.put('/:tipo/:id', (req, res, next) => {
         }
 
         // Establece antigua ruta del archivo
-        const oldPath = `./uploads/${tipo}/${object.img}`;
+        const oldPath = object.img ? `./uploads/${tipo}/${object.img}` : null;
 
         file.mv(path, err => {
             if (err) {
@@ -82,10 +82,20 @@ app.put('/:tipo/:id', (req, res, next) => {
                 }
 
                 // Si existe, elimina el archivo
-                if (fs.existsSync(oldPath)) {
-                    fs.unlinkSync(oldPath);
+                if (oldPath) {
+                    if (fs.existsSync(oldPath)) {
+                        fs.unlink(oldPath, (err) => {
+                            if(err){
+                                return res.status(500).json({
+                                    ok: false,
+                                    mensaje: 'Ocurrió un error al eliminar la imagen anterior',
+                                    errors: { mensaje: err }
+                                });
+                            }
+                        });
+                    }
                 }
-
+                
                 return res.status(200).json({
                     ok: true,
                     mensaje: 'Archivo subido correctamente',

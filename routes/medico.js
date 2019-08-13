@@ -4,12 +4,44 @@ const mdAutenticacion = require('../middlewares/autenticacion');
 
 const app = express();
 
+// Obtener medico
+app.get('/:id', mdAutenticacion.verificaToken, (req, res, next) => {
+    const id = req.params.id;
+
+    Medico.findById(id)
+        .populate('usuario', 'nombre email')
+        .populate('hospital')
+        .exec(
+            (err, medico) => {
+            if ( err ){
+                return res.status(500).json({
+                    ok: false,
+                    message: 'Error cargando medico',
+                    errors: err
+                });
+            }
+
+            if( !medico ){
+                return res.status(400).json({
+                    ok: false,
+                    mensaje: 'Medico no existe',
+                    errors: { message: 'No existe medico con ese id' }
+                });
+            }
+            
+            res.status(200).json({
+                ok: true,
+                data: medico
+            });
+        });
+});
+
 // List medicos
 app.get('/', (req, res, next) => {
     let skip = req.query.skip || 0;
     skip = Number(skip);
 
-    let limit = req.query.limit || 5;
+    let limit = req.query.limit || 0;
     limit = Number(limit);
 
     Medico.find({})
@@ -89,9 +121,9 @@ app.put('/:id', mdAutenticacion.verificaToken, (req, res) => {
 
         const body = req.body;
         medico.nombre = body.nombre;
-        // medico.img = body.img;
+        medico.img = body.img;
         medico.usuario = req.calledBy;
-        // medico.hospital = body.hospital;
+        medico.hospital = body.hospital;
 
         medico.save( (err, medicoGuardado) => {
             if(err){
@@ -133,7 +165,7 @@ app.delete('/:id', mdAutenticacion.verificaToken, (req, res) => {
 
         res.status(200).json({
             ok: true,
-            usuario: medicoBorrado
+            data: medicoBorrado
         });
     })
 });

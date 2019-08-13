@@ -4,12 +4,44 @@ const mdAutenticacion = require('../middlewares/autenticacion');
 
 const app = express();
 
+// Get hospital
+app.get('/:id', mdAutenticacion.verificaToken, (req, res, next) => {
+    const id = req.params.id;
+
+    Hospital.findById(id)
+        .populate('usuario', 'nombre img email')
+        .exec(
+            (err, hospital) => {
+            if ( err ){
+                return res.status(500).json({
+                    ok: false,
+                    message: 'Error cargando hospital',
+                    errors: err
+                });
+            }
+
+            if( !hospital ){
+                return res.status(400).json({
+                    ok: false,
+                    mensaje: 'Hospital no existe',
+                    errors: { message: 'No existe hospital con ese id' }
+                });
+            }
+
+            res.status(200).json({
+                ok: true,
+                data: hospital
+            });
+        });
+});
+
+
 // List hospitals
 app.get('/', (req, res, next) => {
     let skip = req.query.skip || 0;
     skip = Number(skip);
 
-    let limit = req.query.limit || 5;
+    let limit = req.query.limit || 0;
     limit = Number(limit);
 
     Hospital.find({})
@@ -129,7 +161,7 @@ app.delete('/:id', mdAutenticacion.verificaToken, (req, res) => {
 
         res.status(200).json({
             ok: true,
-            usuario: hospitalBorrado
+            data: hospitalBorrado
         });
     })
 });
