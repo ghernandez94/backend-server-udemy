@@ -21,7 +21,7 @@ app.get('/', (req, res, next) => {
             if ( err ){
                 return res.status(500).json({
                     ok: false,
-                    message: 'Error cargando usuario',
+                    mensaje: 'Error cargando usuario',
                     errors: err
                 });
             }
@@ -53,7 +53,7 @@ app.post('/', (req, res, next) => {
         if ( err ){
             return res.status(400).json({
                 ok: false,
-                message: 'Error al crear usuario',
+                mensaje: 'Error al crear usuario',
                 errors: err
             });
         }
@@ -68,14 +68,14 @@ app.post('/', (req, res, next) => {
 });
 
 // Update usuario
-app.put('/:id', mdAutenticacion.verificaToken, (req, res) => {
+app.put('/:id', [mdAutenticacion.verificaToken, mdAutenticacion.verificaAdminRole], (req, res) => {
     const id = req.params.id;
 
     Usuario.findById( id, ( err, usuario ) => {
         if ( err ){
             return res.status(500).json({
                 ok: false,
-                message: 'Error al buscar usuario',
+                mensaje: 'Error al buscar usuario',
                 errors: err
             });
         }
@@ -83,7 +83,7 @@ app.put('/:id', mdAutenticacion.verificaToken, (req, res) => {
         if ( !usuario ){
             return res.status(400).json({
                 ok: false,
-                message: 'El usuario con el id ' + id + ' no existe ',
+                mensaje: 'El usuario con el id ' + id + ' no existe ',
                 errors: { message: 'No existe usuario con ese id' }
             });
         }
@@ -113,7 +113,7 @@ app.put('/:id', mdAutenticacion.verificaToken, (req, res) => {
 });
 
 // Delete user
-app.delete('/:id', mdAutenticacion.verificaToken, (req, res) => {
+app.delete('/:id', [mdAutenticacion.verificaToken, mdAutenticacion.verificaAdminRole], (req, res) => {
     const id = req.params.id;
 
     Usuario.findByIdAndRemove(id, (err, usuarioBorrado) => {

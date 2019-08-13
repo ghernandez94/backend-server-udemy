@@ -30,7 +30,21 @@ exports.verificaToken = function(req, res, next){
             });
         }
 
-        req.calledBy = decoded.usuario._id;
+        req.calledBy = decoded.usuario;
         next();
     });
+}
+
+exports.verificaAdminRole = function(req, res, next){
+    const id = req.params.id;
+
+    if (req.calledBy.role === 'ADMIN_ROLE' || req.calledBy._id === id) {
+        next();
+    } else {
+        return res.status(403).json({
+            ok: false,
+            mensaje: 'Forbidden',
+            errors: { message: 'No es administrador' }
+        });
+    }
 }

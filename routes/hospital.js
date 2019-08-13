@@ -15,7 +15,7 @@ app.get('/:id', mdAutenticacion.verificaToken, (req, res, next) => {
             if ( err ){
                 return res.status(500).json({
                     ok: false,
-                    message: 'Error cargando hospital',
+                    mensaje: 'Error cargando hospital',
                     errors: err
                 });
             }
@@ -53,7 +53,7 @@ app.get('/', (req, res, next) => {
             if ( err ){
                 return res.status(500).json({
                     ok: false,
-                    message: 'Error cargando hospital',
+                    mensaje: 'Error cargando hospital',
                     errors: err
                 });
             }
@@ -75,14 +75,14 @@ app.post('/', mdAutenticacion.verificaToken, (req, res, next) => {
     const hospital = new Hospital({
         nombre: body.nombre,
         img: body.img,
-        usuario: req.calledBy
+        usuario: req.calledBy._id
     });
 
     hospital.save( (err, hospitalGuardado) => {
         if ( err ){
             return res.status(400).json({
                 ok: false,
-                message: 'Error al crear hospital',
+                mensaje: 'Error al crear hospital',
                 errors: err
             });
         }
@@ -103,7 +103,7 @@ app.put('/:id', mdAutenticacion.verificaToken, (req, res) => {
         if ( err ){
             return res.status(500).json({
                 ok: false,
-                message: 'Error al buscar hospital',
+                mensaje: 'Error al buscar hospital',
                 errors: err
             });
         }
@@ -111,15 +111,15 @@ app.put('/:id', mdAutenticacion.verificaToken, (req, res) => {
         if ( !hospital ){
             return res.status(400).json({
                 ok: false,
-                message: 'El hospital con el id ' + id + ' no existe ',
+                mensaje: 'El hospital con el id ' + id + ' no existe ',
                 errors: { message: 'No existe hospital con ese id' }
             });
         }
 
         const body = req.body;
         hospital.nombre = body.nombre;
-        // hospital.img = body.img;
-        hospital.usuario = req.calledBy
+        hospital.img = body.img;
+        // hospital.usuario = req.calledBy
 
         hospital.save( (err, hospitalGuardado) => {
             if(err){

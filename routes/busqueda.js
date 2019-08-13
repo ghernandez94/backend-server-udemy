@@ -5,7 +5,7 @@ const Usuario = require('../models/usuario');
 
 const app = express();
 
-app.get('/:table/:search', (req, res, next) => {
+app.get('/custom/:table/:search', (req, res, next) => {
     const table = req.params.table;
     const search = req.params.search;
     const regex = new RegExp(search, 'i');

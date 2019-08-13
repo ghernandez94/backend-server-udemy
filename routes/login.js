@@ -46,7 +46,8 @@ app.post('/google', async(req, res) => {
                 res.status(200).json({
                     ok: true,
                     data: usuarioBD,
-                    token: token
+                    token: token,
+                    menu: obtenerMenu(usuarioBD.role)
                 });
             }
         }else{
@@ -74,7 +75,8 @@ app.post('/google', async(req, res) => {
                 res.status(200).json({
                     ok: true,
                     data: usuarioBD,
-                    token: token
+                    token: token,
+                    menu: obtenerMenu(usuarioBD.role)
                 });
             });
         }
@@ -113,7 +115,7 @@ app.post('/', (req, res, next) => {
             return res.status(400).json({
                 ok: false,
                 mensaje: 'Credenciales incorrectas',
-                errors: err
+                errors: { message: 'Credenciales incorrectas' }
             });
         }
 
@@ -121,7 +123,7 @@ app.post('/', (req, res, next) => {
             return res.status(400).json({
                 ok: false,
                 mensaje: 'Credenciales incorrectas',
-                errors: err
+                errors: { message: 'Credenciales incorrectas' }
             });
         }
 
@@ -132,10 +134,42 @@ app.post('/', (req, res, next) => {
         res.status(200).json({
             ok: true,
             data: usuarioBD,
-            token: token
+            token: token,
+            menu: obtenerMenu(usuarioBD.role)
         });
     });
 
 });
+
+function obtenerMenu( role ) {
+    let menu = [
+        {
+          titulo: 'Principal',
+          icono: 'mdi mdi-gauge',
+          submenu: [
+            { titulo: 'Dashboard', url: '/dashboard' },
+            { titulo: 'ProgressBar', url: '/progress' },
+            { titulo: 'Gráficas', url: '/graficas1' },
+            { titulo: 'Promesas', url: '/promesas' },
+            { titulo: 'RXJS', url: '/rxjs' }
+          ]
+        },
+        {
+          titulo: 'Mantenimiento',
+          icono: 'mdi mdi-folder-lock-open',
+          submenu: [
+            // { titulo: 'Usuarios', url: '/usuarios' },
+            { titulo: 'Hospitales', url: '/hospitales' },
+            { titulo: 'Médicos', url: '/medicos' }
+          ]
+        }
+      ];
+
+      if (role === 'ADMIN_ROLE') {
+          menu[1].submenu.unshift({ titulo: 'Usuarios', url: '/usuarios' });
+      }
+
+      return menu;
+}
 
 module.exports = app;

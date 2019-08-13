@@ -16,7 +16,7 @@ app.get('/:id', mdAutenticacion.verificaToken, (req, res, next) => {
             if ( err ){
                 return res.status(500).json({
                     ok: false,
-                    message: 'Error cargando medico',
+                    mensaje: 'Error cargando medico',
                     errors: err
                 });
             }
@@ -54,7 +54,7 @@ app.get('/', (req, res, next) => {
             if ( err ){
                 return res.status(500).json({
                     ok: false,
-                    message: 'Error cargando medico',
+                    mensaje: 'Error cargando medico',
                     errors: err
                 });
             }
@@ -76,7 +76,7 @@ app.post('/', mdAutenticacion.verificaToken, (req, res, next) => {
     const medico = new Medico({
         nombre: body.nombre,
         img: body.img,
-        usuario: req.calledBy,
+        usuario: req.calledBy._id,
         hospital: body.hospital
     });
 
@@ -84,7 +84,7 @@ app.post('/', mdAutenticacion.verificaToken, (req, res, next) => {
         if ( err ){
             return res.status(400).json({
                 ok: false,
-                message: 'Error al crear medico',
+                mensaje: 'Error al crear medico',
                 errors: err
             });
         }
@@ -106,7 +106,7 @@ app.put('/:id', mdAutenticacion.verificaToken, (req, res) => {
         if ( err ){
             return res.status(500).json({
                 ok: false,
-                message: 'Error al buscar medico',
+                mensaje: 'Error al buscar medico',
                 errors: err
             });
         }
@@ -114,7 +114,7 @@ app.put('/:id', mdAutenticacion.verificaToken, (req, res) => {
         if ( !medico ){
             return res.status(400).json({
                 ok: false,
-                message: 'El medico con el id ' + id + ' no existe ',
+                mensaje: 'El medico con el id ' + id + ' no existe ',
                 errors: { message: 'No existe medico con ese id' }
             });
         }
@@ -122,7 +122,7 @@ app.put('/:id', mdAutenticacion.verificaToken, (req, res) => {
         const body = req.body;
         medico.nombre = body.nombre;
         medico.img = body.img;
-        medico.usuario = req.calledBy;
+        // medico.usuario = req.calledBy;
         medico.hospital = body.hospital;
 
         medico.save( (err, medicoGuardado) => {

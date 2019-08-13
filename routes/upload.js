@@ -17,7 +17,7 @@ app.put('/:tipo/:id', (req, res, next) => {
         return res.status(400).json({
             ok: false,
             mensaje: 'Tipo no válido',
-            errors: { mensaje: 'Los tipos permitidos son: ' + validTypes.join(', ') }
+            errors: { message: 'Los tipos permitidos son: ' + validTypes.join(', ') }
         });
     }
 
@@ -25,7 +25,7 @@ app.put('/:tipo/:id', (req, res, next) => {
         return res.status(400).json({
             ok: false,
             mensaje: 'No se encontraron imágenes',
-            errors: { mensaje: 'No se encontraron imágenes' }
+            errors: { message: 'No se encontraron imágenes' }
         });
     }
 
@@ -37,7 +37,7 @@ app.put('/:tipo/:id', (req, res, next) => {
     if (validExtensions.indexOf(extension) < 0) {
         return res.status(400).json({
             ok: false,
-            errors: { mensaje: 'Las extensiones válidas son: ' + validExtensions.join(', ') }
+            errors: { message: 'Las extensiones válidas son: ' + validExtensions.join(', ') }
         });
     }
 
@@ -77,7 +77,7 @@ app.put('/:tipo/:id', (req, res, next) => {
                     return res.status(500).json({
                         ok: false,
                         mensaje: 'Ocurrió un error al actualizar registro',
-                        errors: { mensaje: err }
+                        errors: { message: err }
                     });
                 }
 
@@ -89,7 +89,7 @@ app.put('/:tipo/:id', (req, res, next) => {
                                 return res.status(500).json({
                                     ok: false,
                                     mensaje: 'Ocurrió un error al eliminar la imagen anterior',
-                                    errors: { mensaje: err }
+                                    errors: { message: err }
                                 });
                             }
                         });
@@ -108,7 +108,7 @@ app.put('/:tipo/:id', (req, res, next) => {
         return res.status(500).json({
             ok: false,
             mensaje: 'Ocurrió un error al subir el archivo',
-            errors: { mensaje: err }
+            errors: { message: err }
         });
     })
 });
