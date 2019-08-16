@@ -5,6 +5,7 @@ const Usuario = require('../models/usuario');
 
 const app = express();
 const SEED = require('../config/config').SEED;
+const mdAutenticacion = require('../middlewares/autenticacion');
 
 // Google
 const CLIENT_ID = require('../config/config').CLIENT_ID;
@@ -139,6 +140,18 @@ app.post('/', (req, res, next) => {
         });
     });
 
+});
+
+app.get('/renovartoken', mdAutenticacion.verificaToken, (req, res) => {
+    // Crear token
+    let usuario = req.calledBy;
+    usuario.password = '';
+    const token = jwt.sign( {usuario}, SEED, { expiresIn: 14400 } );
+
+    res.status(200).json({
+        ok: true,
+        token: token,
+    });
 });
 
 function obtenerMenu( role ) {
